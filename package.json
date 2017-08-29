@@ -1,6 +1,6 @@
 {
   "name": "a1-database",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "handy persistence, no installation, JSON database",
   "main": "lib/index.js",
   "private": false,
@@ -8,7 +8,10 @@
     "test": "test/*"
   },
   "keywords": [
-    "database", "no-sql", "JSON", "embedded"
+    "database",
+    "no-sql",
+    "JSON",
+    "embedded"
   ],
   "author": "ax1",
   "license": "MIT",

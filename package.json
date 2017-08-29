@@ -1,0 +1,19 @@
+{
+  "name": "a1-database",
+  "version": "0.0.1",
+  "description": "handy persistence, no installation, JSON database",
+  "main": "lib/index.js",
+  "private": false,
+  "scripts": {
+    "test": "test/*"
+  },
+  "keywords": [
+    "database", "no-sql", "JSON", "embedded"
+  ],
+  "author": "ax1",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "nedb": "^1.8.0"
+  }
+}

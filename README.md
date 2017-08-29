@@ -4,7 +4,7 @@ Zero installation JSON database.
 
 ## Usage
 
-The database is a [NEDB](https://www.npmjs.com/package/node), but with promisified methods already. The callback methods are still available for edge cases. Example: if the calback method is `ìnsert()`, the promise version is `insertAsync()`.
+The database is a [NEDB](https://www.npmjs.com/package/nedb), but with promisified methods already. The callback methods are still available for edge cases. Example: if the calback method is `ìnsert()`, the promised version is `insertAsync()`.
 
 No database installation is required because all data is stored in one single file. Perfect for development!.
 
@@ -30,4 +30,4 @@ async function test() {
 test()
 ```
 
-More info and examples: check [NEDB](https://www.npmjs.com/package/node) and then use the promisified version of the methods.
+More info and examples: check [NEDB](https://www.npmjs.com/package/nedb) and then use the promisified version of the methods.

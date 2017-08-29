@@ -1,6 +1,6 @@
 {
   "name": "a1-database",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "handy persistence, no installation, JSON database",
   "main": "lib/index.js",
   "private": false,

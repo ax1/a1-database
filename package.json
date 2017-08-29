@@ -15,6 +15,13 @@
   ],
   "author": "ax1",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ax1/a1-database.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ax1/a1-database/issues"
+  },
   "dependencies": {
     "bluebird": "^3.5.0",
     "nedb": "^1.8.0"

@@ -12,11 +12,11 @@ No external database installation is required because all data is stored in one 
 
 ## Usage
 
-The objects to be stored are just JSON-like objects.
+The database uses javascript objects (no ORM needed). The query results is a javascript array containing the objects.
 
 Instead of assigning an \_id fied to each element, multiple keys are allowed by using the appropriate filter function.
 
-To use unique IDs, use always a filter (e.g: `el=>el.id===$id`) when saving an element.
+To use unique IDs, use always a filter (e.g: `el=>el.id===$id`) when saving an element. This will update the old values.
 
 Portable. Each database is one file. Easy to backup and to dump data.
 
@@ -51,12 +51,14 @@ test()
 ```
 
 ## API
-
+database:
+- **connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection
+- **disconnect(db: Db): void** -> close database and clean resources 
 Db:
 - **find(filter: function) : Array** -> return list of items based on a function
 - **save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added - deleted items
 - **delete(filter: function) : number** -> return list of deleted items based on a function
 
-### Why filters instead of objects for finding?
+### Why filters instead of SELECT/JSON for querying?
 
-Other databases use SQL or JSON models to perform queries. When queries are simple, things are nice (`{id:28}` vs `el => el.id === 28`), but when queries are complex, you need to learn the query syntax "tricky parts", or perform several steps. By using functions (filters) instead, you can create the query the same way you would do when using a plain javascript array. Besides, the query is already sanitied. 
+Other databases use SQL or JSON models to perform queries. When queries are simple, things are nice (`{id:28}` vs `el => el.id === 28`), but when queries are complex, you need to learn the query syntax "tricky parts", or perform several steps. By using functions (filters) instead, you can create the query the same way you would do when using a javascript array. Besides, the query is already sanitied.

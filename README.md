@@ -12,8 +12,6 @@ No external database installation is required because all data is stored in one 
 
 ## Usage
 
-
-
 The objects to be stored are just JSON-like objects.
 
 Instead of assigning an \_id fied to each element, multiple keys are allowed by using the appropriate filter function.
@@ -58,3 +56,7 @@ Db:
 - **find(filter: function) : Array** -> return list of items based on a function
 - **save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added - deleted items
 - **delete(filter: function) : number** -> return list of deleted items based on a function
+
+### Why filters instead of objects for finding?
+
+Other databases use SQL or JSON models to perform queries. When queries are simple, things are nice (`{id:28}` vs `el => el.id === 28`), but when queries are complex, you need to learn the query syntax "tricky parts", or perform several steps. By using functions (filters) instead, you can create the query the same way you would do when using a plain javascript array. Besides, the query is already sanitied. 

@@ -4,7 +4,7 @@ const assert = require('assert')
 async function test() {
   try {
     // connect to database (file location is process.pwd() + file)
-    const db = await database.connect('test.db')
+    const db = await database.connect('test/test.db')
     // the elements are just JSON objects
     const item = { name: 'juan', age: 31 }
     // function to filter data
@@ -34,7 +34,8 @@ async function test() {
     database.disconnect(db)
     console.log('database tests passed!')
   } catch (err) {
-    assert.fail(err.toString())
+    //assert.fail(err.toString()) //assert.fail exits the function, so the rejected promise is not fulfilled
+    console.error(err)
   }
 }
 

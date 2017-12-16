@@ -1,8 +1,8 @@
 {
   "name": "a1-database",
-  "version": "0.0.3",
-  "description": "handy persistence, no installation, JSON database",
-  "main": "lib/index.js",
+  "version": "1.0.0",
+  "description": "Embedded JSON database",
+  "main": "lib/database.js",
   "private": false,
   "scripts": {
     "test": "test/*"
@@ -11,7 +11,8 @@
     "database",
     "no-sql",
     "JSON",
-    "embedded"
+    "embedded",
+    "standalone"
   ],
   "author": "ax1",
   "license": "MIT",
@@ -22,8 +23,5 @@
   "bugs": {
     "url": "https://github.com/ax1/a1-database/issues"
   },
-  "dependencies": {
-    "bluebird": "^3.5.0",
-    "nedb": "^1.8.0"
-  }
+  "dependencies": {}
 }

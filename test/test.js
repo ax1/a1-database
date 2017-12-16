@@ -32,6 +32,7 @@ async function test() {
     assert.equal(count, 0, `database clean`)
     // disconnect is optional
     database.disconnect(db)
+    console.log('database tests passed!')
   } catch (err) {
     assert.fail(err.toString())
   }

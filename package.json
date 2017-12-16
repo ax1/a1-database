@@ -5,7 +5,7 @@
   "main": "lib/database.js",
   "private": false,
   "scripts": {
-    "test": "test/*"
+    "test": "node test/test.js"
   },
   "keywords": [
     "database",

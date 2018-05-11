@@ -14,14 +14,14 @@ No external database installation is required because all data is stored in one 
 
 The database uses javascript objects (no ORM needed). The query results is a javascript array containing the objects.
 
-Instead of assigning an \_id fied to each element, multiple keys are allowed by using the appropriate filter function.
+Instead of assigning an \_id field to each element, multiple keys are allowed by using the appropriate filter function.
 
 To use unique IDs, use always a filter (e.g: `el=>el.id===$id`) when saving an element. This will update the old values.
 
 Portable. Each database is one file. Easy to backup and to dump data.
 
 ```javascript
-const database = require('../lib/database')
+const database = require('a1-database')
 
 async function test() {
   try {
@@ -53,7 +53,7 @@ test()
 ## API
 database:
 - **connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection
-- **disconnect(db: Db): void** -> close database and clean resources 
+- **disconnect(db: Db): void** -> close database and clean resources
 Db:
 - **find(filter: function) : Array** -> return list of items based on a function
 - **save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added - deleted items

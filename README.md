@@ -62,3 +62,36 @@ Db:
 ### Why filters instead of SELECT/JSON for querying?
 
 Other databases use SQL or JSON models to perform queries. When queries are simple, things are nice (`{id:28}` vs `el => el.id === 28`), but when queries are complex, you need to learn the query syntax "tricky parts", or perform several steps. By using functions (filters) instead, you can create the query the same way you would do when using a javascript array. Besides, the query is already sanitied.
+
+## Database file format
+
+> The format is compatible for reading JSON log files
+
+Format of row:
+
+`[action][|]json`
+
+Example:
+
+Plain JSON file as input for reading only
+
+```
+{"id":"1","name","Gordon"}
+{"id":"2","name","Ramsay"}
+```
+
+General database with some insert, update, delete operations. Note: to allow force shutdown of the database, the file can contain `delete` actions. Once the database is loaded again, a `compact` process remove the delete rows keeping the database clean.
+
+```
+{"id":"1","name","Gordon"}
+{"id":"2","name","Ramsay"}
+delete|{"id":"1","name","Gordon"}
+delete|{"id":"2","name","Ramsay"}
+{"id":"1","name","Gordon Ramsay"}
+```
+
+## Backup, restore and compact
+
+- backup: copy the database file.
+- restore: drop the file. 
+- compact: either call db._compact() before stopping the app or just start and stop the database. Both operations will invoke the cleaning action.

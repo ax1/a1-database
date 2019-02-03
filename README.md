@@ -28,7 +28,7 @@ async function test() {
   let results = await db.find(el => el.name === 'Juan')
 }
 
-test().catch(err=console.error(err))
+test().catch(err => console.error(err))
 ```
 
 ## API

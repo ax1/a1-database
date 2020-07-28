@@ -128,4 +128,4 @@ delete|{"id":"2","name","Ramsay"}
 
 - backup: copy the database file.
 - restore: drop the file. 
-- compact: either call db._compact() before stopping the app or just start and stop the database. Both operations will invoke the cleaning action.
+- compact: no need to manual call of compact(). This operation is called automatically when starting and on every 10K consecutive save/delete operations

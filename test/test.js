@@ -4,8 +4,8 @@ const assert = require('assert')
 async function test() {
   try {
     // connect to database (file location is process.pwd() + file)
-    const db = await database.connect('test/test.db')
-    // the elements are just JSON objects
+    const db = await database.connect('./test/test.db')
+    // the elements are just JSON objects (plain string files also accepted if onñly for reading and searching. eg: log files)
     const item = { name: 'juan', age: 31 }
     // function to filter data
     const filter = el => el.name === item.name
@@ -24,7 +24,7 @@ async function test() {
     assert.equal(count > 1, true, `save several items`)
     // this time, save but also delete old objects
     item.age = 33
-    count = await db.save(item, filter)
+    count = await db.save(item, filter) // this "delete" takes long time because of 1-splice and 2-persist delete rows. For the test it could be hugely improved both parts but in the real life you don't usually delete many rows
     assert.equal(count < 0, true, `save 1 item while deleting the old elements with the same 'name'`)
     // delete all the elements in the db
     await db.delete(() => true)

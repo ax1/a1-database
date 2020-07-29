@@ -76,10 +76,10 @@ async function test() {
     assert.equal(count < 0, true, `save 1 item while deleting the old elements with the same 'name'`)
     // delete all the elements in the db
     await db.delete(() => true)
-    count = await db.find(() => true)
+    count = await db.find(() => true).length
     assert.equal(count, 0, `database clean`)
     // disconnect is optional
-    database.disconnect(db)
+    await database.disconnect(db)
     console.log('database tests passed!')
   } catch (err) {
     //assert.fail(err.toString()) //assert.fail exits the function, so the rejected promise is not fulfilled

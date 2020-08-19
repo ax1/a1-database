@@ -12,13 +12,19 @@ No external database installation is required because all data is stored in one 
 
 ## Usage
 
-The database uses javascript objects (no ORM needed). The query results are provided as array of objects.
-
-Instead of assigning an \_id field to each element, multiple keys are allowed by using the appropriate filter function (useful for logs or for data series).
-
-To use unique IDs, a filter function (e.g: `el=>el.id===$id`) must be provided when saving an element. This will update the old values and save the new ones.
+The database uses javascript objects (no ORM is needed). The query results are provided as array of objects.
 
 Portable. Each database is one file. Easy to backup and to dump data.
+
+### Use as SQL database
+
+If items (rows) contains `id`, the database will take care of duplicated keys (use `insert`, `upsert`, `update` methods because they are simpler to work with).
+
+### Use as Heterogeneus database:
+
+Multiple keys are allowed by using the appropriate filter function (useful for logs or for data series). In this case use the `save` method with a filter instead of insert,update. This way you can add heterogeneous items, and with filter functions, primary keys different than `id` (for example, name, id_card, timestamp, etc) are allowed, and allows more flexible use cases.
+To use unique IDs, a filter function (e.g: `el=>el.id===$id`) must be provided when saving an element. This will delete the old values and save the new ones.
+
 
 ```javascript
 const database = require('a1-database')
@@ -40,6 +46,7 @@ test().catch(console.error)
 **Db:**
 - **async find(filter)** -> return list of items based on a function. `find(filter: function) : Array`
 - **async insert(item(s))** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
+- **async upsert(item(s))** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT.
 - **async save(item(s)[,filter])** -> save items, optionally delete old items by using a function, return the number of added - deleted items. `save(item(s):Array|Object [,filter: function]) : number`
 - **async delete(filter)** -> return list of deleted items based on a function. `delete(filter: function) : number`
 

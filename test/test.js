@@ -13,6 +13,7 @@ async function test() {
     await db.delete(() => true)
     // the elements are just JSON objects (plain string files also accepted if only for reading and searching. eg: log files)
     await testInsert()
+    await testUpsert()
     // function to filter data
     const filter = el => el.name === item.name
     // find
@@ -46,10 +47,14 @@ async function test() {
 }
 
 async function testInsert() {
-  await db.insert(item)
   assert(await db.insert(item) > 0, 'Insert should add non-id items')
   assert(await db.insert(item2) > 0, 'Insert should add non duplicated id')
-  assert.throws(async () => await db.insert(item2), 'Insert should throw if duplicated id')
+  assert.rejects(async () => await db.insert(item2), 'Insert should throw duplicated id')
+}
+
+async function testUpsert() {
+  assert(await db.upsert(item) > 0, 'Upsert should add non-id items')
+  assert(await db.upsert(item2) === 0, 'Upsert should replace a duplicated id')
 }
 
 async function testLoad() {

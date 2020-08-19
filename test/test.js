@@ -3,12 +3,16 @@ const assert = require('assert')
 
 const DATABASE_PATH = __dirname + '/test.db'
 
+const item = { name: 'juan', age: 31 }
+const item2 = { id: 'juan', age: 31 }
+let db
 async function test() {
   try {
     // connect to database (file location is process.pwd() + file)
-    const db = await database.connect(DATABASE_PATH)
+    db = await database.connect(DATABASE_PATH)
+    await db.delete(() => true)
     // the elements are just JSON objects (plain string files also accepted if only for reading and searching. eg: log files)
-    const item = { name: 'juan', age: 31 }
+    await testInsert()
     // function to filter data
     const filter = el => el.name === item.name
     // find
@@ -39,6 +43,13 @@ async function test() {
     //assert.fail(err.toString()) //assert.fail exits the function, so the rejected promise is not fulfilled
     console.error(err)
   }
+}
+
+async function testInsert() {
+  await db.insert(item)
+  assert(await db.insert(item) > 0, 'Insert should add non-id items')
+  assert(await db.insert(item2) > 0, 'Insert should add non duplicated id')
+  assert.throws(async () => await db.insert(item2), 'Insert should throw if duplicated id')
 }
 
 async function testLoad() {

@@ -34,13 +34,14 @@ test().catch(console.error)
 ## API
 
 **database:**
-- **connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection
-- **disconnect(db: Db): void** -> close database and clean resources
+- **async connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection
+- **async disconnect(db: Db): void** -> close database and clean resources
 
 **Db:**
-- **find(filter)** -> return list of items based on a function. `find(filter: function) : Array`
-- **save(item(s)[,filter])** -> save items, optionally delete old items by using a function, return the number of added - deleted items. `save(item(s):Array|Object [,filter: function]) : number`
-- **delete(filter)** -> return list of deleted items based on a function. `delete(filter: function) : number`
+- **async find(filter)** -> return list of items based on a function. `find(filter: function) : Array`
+- **async insert(item(s))** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
+- **async save(item(s)[,filter])** -> save items, optionally delete old items by using a function, return the number of added - deleted items. `save(item(s):Array|Object [,filter: function]) : number`
+- **async delete(filter)** -> return list of deleted items based on a function. `delete(filter: function) : number`
 
 
 ## Examples

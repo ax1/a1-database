@@ -2,6 +2,7 @@
 
 Zero installation, zero dependencies, multi-key, persistent, JSON database.
 
+
 ## Installation
 
 ```bash
@@ -16,14 +17,16 @@ The database uses javascript objects (no ORM is needed). The query results are p
 
 Portable. Each database is one file. Easy to backup and to dump data.
 
+> Tips: if you use `id` as primary key for items, database operations will be simpler. In most of the cases `save`, `find` and `delete` are the only methods you need.
+
 ### Use as SQL database
 
-If items (rows) contain `id`, the database will take care of duplicated keys (use `insert`, `upsert`, `update` methods because they are simpler to work with).
+If items (rows) contain `id`, the database will take care of duplicated keys (you can use `insert`, `upsert`, `update` to feel like SQL ,or use generic `save` as well since it does not require adding filter to remove old items).
 
 ### Use as Document database
 
 Multiple keys are allowed by using the appropriate filter function (useful for logs or for data series). In this case use the `save` method with a filter instead of insert,update. This way you can add heterogeneous items, and with filter functions, even primary keys different than `id` (for example, name, id_card, timestamp, etc) are allowed.
-To use unique IDs different than `id`, a filter function (e.g: `el=>el.namt===$nom`) must be provided when saving an element. This will delete the old values and save the new ones.
+To use unique IDs different than `id`, a filter function (e.g: `el = > el.name === $name`) must be provided when saving an element. This will delete the old values and save the new ones.
 
 
 ```javascript
@@ -31,6 +34,9 @@ const database = require('a1-database')
 
 async function test() {
   const db = await database.connect('users.db')
+  await save({ name: 'Juan' })
+  await save([{ id: 100, value:'old test' }])
+  await save([{ id: 100, value:'new test' }]) // item with id, so old items are removed
   const results = await db.find(el => el.name === 'Juan')
   const deleteAll= await db.delete(el=>true)
 }
@@ -45,15 +51,18 @@ test().catch(console.error)
 - **async disconnect(db: Db): void** -> close database and clean resources
 
 **Db:**
-- **async insert(item(s):Array|Object) : number** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
-- **async upsert(item(s):Array|Object) : number** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).
-- **async update(item(s):Array|Object) : number** -> update existing items. If items have 'id' and this id is not in database, an error is thrown. Otherwise the items are added. This is the equivalent of SQL UPDATE.
-- **async delete(filter: function) : number** -> return number of deleted items based on a function.
 
 - **async save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters). If no filter, and items have 'id', the old items are deleted automatically. If items have primary key different than id, you must set the filter function to delete them.  
 
 - **async find(filter: function): Array<Object>** -> return list of items based on a function. 
 
+- **async delete(filter: function) : number** -> return number of deleted items based on a function.
+
+Secondary methods:
+
+- **async insert(item(s):Array|Object) : number** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
+- **async upsert(item(s):Array|Object) : number** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).
+- **async update(item(s):Array|Object) : number** -> update existing items. If items have 'id' and this id is not in database, an error is thrown. Otherwise the items are added. This is the equivalent of SQL UPDATE.
 
 ### Why filters instead of SELECT/JSON for querying?
 

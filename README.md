@@ -44,11 +44,16 @@ test().catch(console.error)
 - **async disconnect(db: Db): void** -> close database and clean resources
 
 **Db:**
-- **async find(filter)** -> return list of items based on a function. `find(filter: function) : Array`
 - **async insert(item(s))** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
-- **async upsert(item(s))** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT.
-- **async save(item(s)[,filter])** -> save items, optionally delete old items by using a function, return the number of added - deleted items. `save(item(s):Array|Object [,filter: function]) : number`
+- **async upsert(item(s))** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).
+- **async update(item(s))** -> update existing items. If items have 'id' and this id is not in database, an error is thrown. Otherwise the items are added. This is the equivalent of SQL UPDATE.
 - **async delete(filter)** -> return list of deleted items based on a function. `delete(filter: function) : number`
+
+- **async save(item(s)[,filter])** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters)  
+- deleted items. `save(item(s):Array|Object [,filter: function]) : number`
+
+- **async find(filter)** -> return list of items based on a function. `find(filter: function) : Array`. 
+
 
 
 ## Examples

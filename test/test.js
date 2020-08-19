@@ -14,6 +14,7 @@ async function test() {
     // the elements are just JSON objects (plain string files also accepted if only for reading and searching. eg: log files)
     await testInsert()
     await testUpsert()
+    await testUpdate()
     // function to filter data
     const filter = el => el.name === item.name
     // find
@@ -55,6 +56,13 @@ async function testInsert() {
 async function testUpsert() {
   assert(await db.upsert(item) > 0, 'Upsert should add non-id items')
   assert(await db.upsert(item2) === 0, 'Upsert should replace a duplicated id')
+}
+
+async function testUpdate() {
+  assert(await db.update(item) > 0, 'Update should add non-id items')
+  assert(await db.update(item2) === 0, 'Update should replace a duplicated id')
+  const newItem = { id: 'pepe' }
+  assert.rejects(async () => await db.update(newItem), 'Update should throw if a new element')
 }
 
 async function testLoad() {

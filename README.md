@@ -18,12 +18,12 @@ Portable. Each database is one file. Easy to backup and to dump data.
 
 ### Use as SQL database
 
-If items (rows) contains `id`, the database will take care of duplicated keys (use `insert`, `upsert`, `update` methods because they are simpler to work with).
+If items (rows) contain `id`, the database will take care of duplicated keys (use `insert`, `upsert`, `update` methods because they are simpler to work with).
 
-### Use as Heterogeneus database:
+### Use as Document database
 
-Multiple keys are allowed by using the appropriate filter function (useful for logs or for data series). In this case use the `save` method with a filter instead of insert,update. This way you can add heterogeneous items, and with filter functions, primary keys different than `id` (for example, name, id_card, timestamp, etc) are allowed, and allows more flexible use cases.
-To use unique IDs, a filter function (e.g: `el=>el.id===$id`) must be provided when saving an element. This will delete the old values and save the new ones.
+Multiple keys are allowed by using the appropriate filter function (useful for logs or for data series). In this case use the `save` method with a filter instead of insert,update. This way you can add heterogeneous items, and with filter functions, even primary keys different than `id` (for example, name, id_card, timestamp, etc) are allowed.
+To use unique IDs different than `id`, a filter function (e.g: `el=>el.namt===$nom`) must be provided when saving an element. This will delete the old values and save the new ones.
 
 
 ```javascript
@@ -31,7 +31,8 @@ const database = require('a1-database')
 
 async function test() {
   const db = await database.connect('users.db')
-  let results = await db.find(el => el.name === 'Juan')
+  const results = await db.find(el => el.name === 'Juan')
+  const deleteAll= await db.delete(el=>true)
 }
 
 test().catch(console.error)
@@ -44,75 +45,23 @@ test().catch(console.error)
 - **async disconnect(db: Db): void** -> close database and clean resources
 
 **Db:**
-- **async insert(item(s))** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
-- **async upsert(item(s))** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).
-- **async update(item(s))** -> update existing items. If items have 'id' and this id is not in database, an error is thrown. Otherwise the items are added. This is the equivalent of SQL UPDATE.
-- **async delete(filter)** -> return list of deleted items based on a function. `delete(filter: function) : number`
+- **async insert(item(s):Array|Object) : number** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
+- **async upsert(item(s):Array|Object) : number** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).
+- **async update(item(s):Array|Object) : number** -> update existing items. If items have 'id' and this id is not in database, an error is thrown. Otherwise the items are added. This is the equivalent of SQL UPDATE.
+- **async delete(filter: function) : number** -> return number of deleted items based on a function.
 
-- **async save(item(s)[,filter])** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters)  
-- deleted items. `save(item(s):Array|Object [,filter: function]) : number`
+- **async save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters). If no filter, and items have 'id', the old items are deleted automatically. If items have primary key different than id, you must set the filter function to delete them.  
 
-- **async find(filter)** -> return list of items based on a function. `find(filter: function) : Array`. 
-
-
-
-## Examples
-
-```javascript
-const database = require('a1-database')
-const assert = require('assert')
-
-async function test() {
-  try {
-    // connect to database (file location is process.pwd() + file)
-    const db = await database.connect('test/test.db')
-    // the elements are just JSON objects
-    const item = { name: 'juan', age: 31 }
-    // function to filter data
-    const filter = el => el.name === item.name
-    // find
-    let results = await db.find(filter)
-    assert.equal(results.length, 0, `find returned ${results.length} values`)
-    // store object
-    for (let r = 0; r < 10000; r++) {
-      item.length = r
-      await db.save(item)
-    }
-    let count = await db.save(item)
-    assert.equal(count, 1, `save 1 item`)
-    const items = [item, item, item]
-    count = await db.save(items)
-    assert.equal(count > 1, true, `save several items`)
-    // this time, save but also delete old objects
-    item.age = 33
-    count = await db.save(item, filter)
-    assert.equal(count < 0, true, `save 1 item while deleting the old elements with the same 'name'`)
-    // delete all the elements in the db
-    await db.delete(() => true)
-    count = await db.find(() => true).length
-    assert.equal(count, 0, `database clean`)
-    // disconnect is optional
-    await database.disconnect(db)
-    console.log('database tests passed!')
-  } catch (err) {
-    //assert.fail(err.toString()) //assert.fail exits the function, so the rejected promise is not fulfilled
-    console.error(err)
-  }
-}
-
-test()
-  .then(() => console.log('\x1b[32m%s\x1b[0m', '✔ TESTS OK'))
-  .catch(err => { console.log('\x1b[31m%s\x1b[0m', '✘ TESTS NOT OK'); console.error(err) })
-```
+- **async find(filter: function): Array<Object>** -> return list of items based on a function. 
 
 
 ### Why filters instead of SELECT/JSON for querying?
 
-Other databases use SQL or JSON models to perform queries. When queries are simple, traditional queries are cleaner (`{id:28}` vs `el => el.id === 28`), but when queries are complex, you need to learn the query syntax "tricky parts", or perform several steps. By using functions (filters) instead, you can create the query the same way you would do when using a javascript array. Besides, the query is already sanitied.
+Other databases use SQL or JSON models to perform queries. When queries are simple, traditional queries are cleaner (`{age:28}` vs `el => el.age === 28`), but when queries are complex, you need to learn the query syntax "tricky parts", or perform several steps. By using functions (filters) instead, you can create the query the same way you would do when looking up in javascript arrays. Besides, the query is already sanitied.
 
 ## Database file format
 
-> The format is compatible for reading JSON log files
+> The format is compatible for reading plain String or JSON log files
 
 Format of row:
 

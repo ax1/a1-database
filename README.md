@@ -46,19 +46,19 @@ test().catch(console.error)
 
 ## API
 
-**database:**
-- **async connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection
-- **async disconnect(db: Db): void** -> close database and clean resources
+### database:
+- **async connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection.
+- **async disconnect(db: Db): void** -> close database and clean resources.
 
-**Db:**
+### Db:
 
 - **async save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters). If no filter, and items have 'id', the old items are deleted automatically. If items have primary key different than id, you must set the filter function to delete them.  
 
-- **async find(filter: function): Array<Object>** -> return list of items based on a function. 
+- **async find(filter: function): Array<Object\>** -> return list of items based on a function. 
 
-- **async delete(filter: function) : number** -> return number of deleted items based on a function.
+- **async delete(filter: function) : number** -> return number of deleted items based on a function.  
 
-Secondary methods:
+Secondary Db methods:
 
 - **async insert(item(s):Array|Object) : number** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
 - **async upsert(item(s):Array|Object) : number** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).

@@ -19,7 +19,8 @@ async function test() {
     await testUpdate()
     await testSave()
     await testFind()
-    await testLogLines()
+    await testStringItems()
+    await testCompact()
     await testDelete()
 
     // disconnect is optional
@@ -67,9 +68,9 @@ async function testFind() {
   assert(results.length > 0, `find returned ${results.length} values`)
 }
 
-async function testLogLines() {
+async function testStringItems() {
   // plain string files also accepted if only for reading and searching. eg: log files
-  assert(await db.save('this is a log line'), 'should allow for plain log files')
+  assert(await db.save((new Date()).toUTCString() + ' this is a log line '), 'should allow for plain log files')
   const results = await db.find(() => true)
   assert(results.length > 0, `should find and retrieve log files`)
 }
@@ -90,6 +91,12 @@ async function testLoad() {
   // clean again and close
   await db.delete(() => true)
   await database.disconnect(db)
+}
+
+async function testCompact() {
+  const obj = { id: 'ctest', num: 0 }
+  for (let r = 1; r < 10000; r++) { obj.num = r; await db.save(obj) }
+  await db.delete(el => el.id === obj.id)
 }
 
 test()

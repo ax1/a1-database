@@ -11,7 +11,10 @@ async function test() {
   try {
     // connect to database (file location is process.pwd() + file)
     db = await database.connect(DATABASE_PATH)
-    await db.delete(() => true) //clean db
+
+    //clean db file
+    await db.delete(() => true)
+    await db._compactDB()
 
     // perform operations
     await testInsert()
@@ -20,6 +23,7 @@ async function test() {
     await testSave()
     await testFind()
     await testStringItems()
+    await testParallelCalls()
     await testCompact()
     await testDelete()
 
@@ -95,8 +99,17 @@ async function testLoad() {
 
 async function testCompact() {
   const obj = { id: 'ctest', num: 0 }
-  for (let r = 1; r < 10000; r++) { obj.num = r; await db.save(obj) }
+  const arr = []
+  for (let r = 1; r < 10000; r++) { obj.num = r; arr.push(obj) }
+  await db.save(arr)
+  Promise.all(arr)
   await db.delete(el => el.id === obj.id)
+}
+
+async function testParallelCalls() {
+  await Promise.all([db.save({ id: 77, name: 'a' }), db.save({ id: 77, name: 'b' }), db.save({ id: 77, name: 'c' })])
+  const count = (await db.find(el => el.id === 77)).length
+  assert.deepStrictEqual(count, 1, `database OK on parallel calls`)
 }
 
 test()

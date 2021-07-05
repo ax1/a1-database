@@ -67,9 +67,14 @@ async function testSave() {
 }
 
 async function testFind() {
+  //test generic find
   const filter = el => el.name === item.name
   let results = await db.find(filter)
   assert(results.length > 0, `find returned ${results.length} values`)
+
+  //test find by id
+  results = await db.find('juan') //both juan but only one is ID
+  assert(results.length == 1, `find by ID returned ${results.length} values`)
 }
 
 async function testStringItems() {

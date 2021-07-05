@@ -52,11 +52,11 @@ test().catch(console.error)
 
 ### Db:
 
-- **async save(item(s):Array|Object [,filter: function]) : number** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters). If no filter, and items have 'id', the old items are deleted automatically. If items have primary key different than id, you must set the filter function to delete them.  
+- **async save(item(s):Array|Object [,filter: Function]) : number** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters). If no filter, and items have 'id', the old items are deleted automatically. If items have primary key different than id, you must set the filter function to delete them.  
 
-- **async find(filter: function): Array<Object\>** -> return list of items based on a function. 
+- **async find(id_or_filter: number|String|Function): Array<Object\>** -> Find elements. This method performs either find(id) or find(filter).
 
-- **async delete(filter: function) : number** -> return number of deleted items based on a function.  
+- **async delete(filter: Function) : number** -> return number of deleted items based on a function.  
 
 Secondary Db methods:
 

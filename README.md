@@ -33,7 +33,7 @@ To use unique IDs different than `id`, a filter function (e.g: `el = > el.name =
 const database = require('a1-database')
 
 async function test() {
-  const db = await database.connect('users.db')
+  const db = await database.get('users.db') // slightly better than database.connect
   await db.save({ name: 'Juan' })
   await db.save([{ id: 100, value:'old test' }])
   await db.save([{ id: 100, value:'new test' }]) // item with id, so old items are removed
@@ -49,6 +49,7 @@ test().catch(console.error)
 ### database:
 - **async connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection.
 - **async disconnect(db: Db): void** -> close database and clean resources.
+- **async get(path: string) : Db** ->  * Same as connect. Better name to state that the database is not created if already exists. This function is useful to reuse db references.
 
 ### Db:
 

@@ -97,6 +97,10 @@ async function testLoad() {
   const count = (await db.find(() => true)).length
   assert.deepStrictEqual(count, 1, `database OK on load`)
 
+  // get() should return the existing database
+  let db2 = await database.get(DATABASE_PATH)
+  assert.ok(db === db2)
+
   // clean again and close
   await db.delete(() => true)
   await database.disconnect(db)

@@ -34,9 +34,9 @@ const database = require('a1-database')
 
 async function test() {
   const db = await database.connect('users.db')
-  await save({ name: 'Juan' })
-  await save([{ id: 100, value:'old test' }])
-  await save([{ id: 100, value:'new test' }]) // item with id, so old items are removed
+  await db.save({ name: 'Juan' })
+  await db.save([{ id: 100, value:'old test' }])
+  await db.save([{ id: 100, value:'new test' }]) // item with id, so old items are removed
   const results = await db.find(el => el.name === 'Juan')
   const deleteAll= await db.delete(el=>true)
 }
@@ -54,7 +54,7 @@ test().catch(console.error)
 
 - **async save(item(s):Array|Object [,filter: Function]) : number** -> save items, optionally delete old items by using a function, return the number of added. This is a general purpose save method, covering a wide range of situations by using different filters). If no filter, and items have 'id', the old items are deleted automatically. If items have primary key different than id, you must set the filter function to delete them.  
 
-- **async find(id_or_filter: number|String|Function): Array<Object\>** -> Find elements. This method performs either find(id) or find(filter).
+- **async find(id_or_filter: number|String|Function): Array<Object\>** -> Find elements. This method performs either find(id) or find(filter). If the database is just a list of text, find(id) can be used.
 
 - **async delete(filter: Function) : number** -> return number of deleted items based on a function.  
 

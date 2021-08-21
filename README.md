@@ -46,6 +46,8 @@ test().catch(console.error)
 
 ## API
 
+> Important: database path is either absolute '/home/myApp/dbs/users.db' or relative to CWD 'dbs/users. Note that it is not relative to the js file (as require('./js') does. This is because if refactoring code occurs, the database paths remains the same. 
+
 ### database:
 - **async connect(path: string) : Db** -> given a relative path to process.CWD() starts the database connection.
 - **async disconnect(db: Db): void** -> close database and clean resources.
@@ -57,7 +59,9 @@ test().catch(console.error)
 
 - **async find(id_or_filter: number|String|Function): Array<Object\>** -> Find elements. This method performs either find(id) or find(filter). If the database is just a list of text, find(id) can be used.
 
-- **async delete(filter: Function) : number** -> return number of deleted items based on a function.  
+- **async delete(id_or_filter: number|String|Function) : number** -> return number of deleted items based on same id or filter function. 
+
+- **async exists(id_or_filter: number|String|Function) : number** -> return true/false if the element is in the database. This is a handy method for doing `find() + res.length > 0 ?` in just one line. 
 
 Secondary Db methods:
 

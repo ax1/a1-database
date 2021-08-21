@@ -71,11 +71,15 @@ async function testFind() {
   const filter = el => el.name === item.name
   let results = await db.find(filter)
   assert(results.length > 0, `find returned ${results.length} values`)
+  assert(await db.exists(filter), `exists should return true`)
 
   //test find by id
-  results = await db.find('juan') //both juan but only one is ID
+  const id = 'juan'
+  results = await db.find(id) //both juan but only one is ID
   assert(results.length == 1, `find by ID returned ${results.length} values`)
+  assert(await db.exists(id), `exists should return true`)
 }
+
 
 async function testStringItems() {
   // plain string files also accepted if only for reading and searching. eg: log files

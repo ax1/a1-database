@@ -61,9 +61,12 @@ test().catch(console.error)
 
 - **async delete(id_or_filter: number|String|Function) : number** -> return number of deleted items based on same id or filter function. 
 
-- **async exists(id_or_filter: number|String|Function) : number** -> return true/false if the element is in the database. This is a handy method for doing `find() + res.length > 0 ?` in just one line. 
+Secondary methods (reduce repetitive code, trust me):
+- **async findOne(id_or_filter: number|String|Function): Object** -> Find ONE element. This method performs either findONE(id) or findOne(filter). Useful when database is a list of unique elements (users, sessions, etc.).
 
-Secondary Db methods:
+- **async exists(id_or_filter: number|String|Function) : number** -> return true/false if the element is in the database. This is a one-line method instead of the typical finding + checking length array. 
+
+SQL-like methods:
 
 - **async insert(item(s):Array|Object) : number** -> insert new items. If items have 'id' and this id is already in database, an error is thrown. This is the equivalent of SQL INSERT.
 - **async upsert(item(s):Array|Object) : number** -> insert or update new items. If items have 'id' and this id is already in database, the item is replaced. Otherwise the items are added. This is the equivalent of SQL UPSERT (or insert on conflict).

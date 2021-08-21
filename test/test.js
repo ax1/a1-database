@@ -22,6 +22,8 @@ async function test() {
     await testUpdate()
     await testSave()
     await testFind()
+    await testFindOne()
+    await testExists()
     await testStringItems()
     await testParallelCalls()
     await testCompact()
@@ -71,15 +73,23 @@ async function testFind() {
   const filter = el => el.name === item.name
   let results = await db.find(filter)
   assert(results.length > 0, `find returned ${results.length} values`)
-  assert(await db.exists(filter), `exists should return true`)
 
   //test find by id
   const id = 'juan'
   results = await db.find(id) //both juan but only one is ID
   assert(results.length == 1, `find by ID returned ${results.length} values`)
-  assert(await db.exists(id), `exists should return true`)
 }
 
+async function testFindOne() {
+  const id = 'juan'
+  const obj = await db.findOne(id) //both juan but only one is ID
+  assert(obj, `findOne returned ${obj}`)
+}
+
+async function testExists() {
+  const id = 'juan'
+  assert(await db.exists(id), `exists should return true`)
+}
 
 async function testStringItems() {
   // plain string files also accepted if only for reading and searching. eg: log files

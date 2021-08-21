@@ -1,6 +1,6 @@
 {
   "name": "a1-database",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Embedded JSON database",
   "main": "lib/database.js",
   "private": false,
